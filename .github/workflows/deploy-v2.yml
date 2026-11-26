@@ -19,7 +19,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      NEXT_PUBLIC_HIDE_PROJECT_SECTION: ${{ vars.NEXT_PUBLIC_HIDE_PROJECT_SECTION }}
       NEXT_PUBLIC_USE_V2_FONT: ${{ vars.NEXT_PUBLIC_USE_V2_FONT }}
     steps:
       - name: Checkout
@@ -28,16 +27,13 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: npm
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Build static site
-        run: npm run build
-
-      - name: Export static site
+      - name: Build and export static site
         run: npm run export
 
       - name: Upload Pages artifact

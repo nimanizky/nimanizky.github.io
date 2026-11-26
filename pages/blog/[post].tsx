@@ -19,45 +19,43 @@ const BlogPostPage = ({ post }: BlogPostProps) => {
         <meta name="description" content={post.excerpt} />
       </Head>
 
-      <main className="min-h-screen bg-gray-100">
-        <BlogNav />
+      <div className="new-portfolio">
+        <BlogNav current="blog" detail />
 
-        <article className="mx-auto w-full max-w-4xl px-6 pb-16 pt-8 md:px-10 md:pt-10">
-          <p className="type-meta text-lg italic text-[#8f9398]">
-            Published on <time dateTime={post.date}>{formatBlogDate(post.date)}</time>
-          </p>
+        <main>
+          <article className="new-article">
+            <header className="new-article-heading">
+              <h1>{post.title}</h1>
+              <p>Published on <time dateTime={post.date}>{formatBlogDate(post.date)}</time></p>
+            </header>
 
-          <h1 className="font-title-theme mt-5 text-5xl font-semibold leading-tight text-[#35373b] md:text-7xl">
-            {post.title}
-          </h1>
+            {post.coverImage && (
+              <img
+                className="new-article-cover"
+                src={post.coverImage}
+                alt={post.coverImageAlt ?? post.title}
+              />
+            )}
 
-          <div className="mt-4 h-1.5 w-16 bg-[#35373b]" />
+            <div className="blog-content">
+              <ReactMarkdown>{post.content}</ReactMarkdown>
+            </div>
 
-          {post.coverImage && (
-            <img
-              className="mt-10 w-full rounded-sm border border-gray-300 object-cover"
-              src={post.coverImage}
-              alt={post.coverImageAlt ?? post.title}
-            />
-          )}
-
-          <div className="blog-content mt-10">
-            <ReactMarkdown>{post.content}</ReactMarkdown>
-          </div>
-
-          <div className="mt-10 flex flex-wrap gap-2">
-            {post.tags.map((tag, index) => (
-              <Link
-                key={`${post.path}-${tag}`}
-                href={`/blog/tags/${post.normalizedTags[index]}`}
-                className="rounded bg-gray-200 px-3 py-1 type-meta text-base text-[#4b4d52] transition hover:bg-gray-300"
-              >
-                {tag}
-              </Link>
-            ))}
-          </div>
-        </article>
-      </main>
+            {post.tags.length > 0 && (
+              <div className="new-article-tags">
+                <span><Link href="/blog/tags/">Tags</Link>:</span>
+                <ul className="blog-tag-links" aria-label="Article tags">
+                  {post.tags.map((tag, index) => (
+                    <li key={post.normalizedTags[index]}>
+                      <Link href={`/blog/tags/${post.normalizedTags[index]}/`}>{tag}</Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </article>
+        </main>
+      </div>
     </>
   );
 };

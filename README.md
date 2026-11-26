@@ -2,7 +2,7 @@
 
 A personal portfolio site built with Next.js, TypeScript, and Tailwind CSS.
 
-The page content is statically generated from markdown files in `pages/markdown`, so updating profile data is straightforward without changing React components.
+The portfolio homepage (`/`) and Old look (`/old-look/`) share the content in `pages/markdown`. The homepage also lists updates from the blog and friends from `pages/markdown/friends.md`.
 
 ## Table of Contents
 
@@ -20,7 +20,7 @@ The page content is statically generated from markdown files in `pages/markdown`
 
 ## Tech Stack
 
-- Next.js 13 (Pages Router)
+- Next.js 15 (Pages Router)
 - React 18
 - TypeScript
 - Tailwind CSS
@@ -28,7 +28,7 @@ The page content is statically generated from markdown files in `pages/markdown`
 
 ## Prerequisites
 
-- Node.js `>=14.6.0` (recommended: Node.js 18 LTS)
+- Node.js 22
 - npm (comes with Node.js)
 
 Check installed versions:
@@ -67,26 +67,19 @@ http://localhost:3000
 
 ## Environment Variables
 
-This project supports optional runtime flags:
+This project supports an optional font setting:
 
 ```env
-NEXT_PUBLIC_HIDE_PROJECT_SECTION=false
 NEXT_PUBLIC_USE_V2_FONT=false
 ```
 
 Setup:
 
 1. Copy `.env.example` to `.env.local`
-2. Set `NEXT_PUBLIC_HIDE_PROJECT_SECTION=true` to hide Projects (`false` or unset to show)
-3. Set `NEXT_PUBLIC_USE_V2_FONT=true` to enable Andre-style typography (Kaisei Opti for headings/brand + system sans for body)
-4. Restart the dev server after changes
+2. Set `NEXT_PUBLIC_USE_V2_FONT=true` to enable Andre-style typography (Kaisei Opti for headings/brand + system sans for body)
+3. Restart the dev server after changes
 
-For Vercel:
-
-1. Open Project Settings → Environment Variables
-2. Add `NEXT_PUBLIC_HIDE_PROJECT_SECTION` with value `true` for Production
-3. Add `NEXT_PUBLIC_USE_V2_FONT` with value `true` when you want the new font theme
-4. Redeploy
+The connected Vercel project uses the Next.js production build. A merge into its production branch (`main`) triggers the Vercel Git integration. The GitHub Pages workflow runs the static export separately.
 
 ## Available Scripts
 
@@ -94,7 +87,6 @@ For Vercel:
 - `npm run build`: Creates production build
 - `npm run start`: Runs production server after build
 - `npm run export`: Exports static site to `out/`
-- `npm run predeploy`: Runs build before deployment
 - `npm run deploy`: Builds, exports, and deploys static files to GitHub Pages using `gh-pages`
 
 ## Project Structure
