@@ -286,17 +286,10 @@
 .new-article-heading h1,
 .new-header .blog-brand {
   font-family: var(--font-title);
+  font-size: clamp(2.125rem, 5vw, 3rem);
   font-weight: 500;
   line-height: 1.1;
   color: var(--color-title);
-}
-
-.new-header h1 {
-  font-size: clamp(2.125rem, 5vw, 3rem);
-}
-
-.new-article-heading h1 {
-  font-size: clamp(1.875rem, 4vw, 2.5rem);
 }
 
 .new-portfolio a,
@@ -324,9 +317,12 @@
   font-size: 0.875rem;
 }
 
+.new-header h1,
 .new-header .blog-brand {
-  font-size: 1.625rem;
-  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-color: #82a4b4;
+  text-decoration-thickness: 0.04em;
+  text-underline-offset: 0.16em;
 }
 
 .new-section-links a[aria-current] {
