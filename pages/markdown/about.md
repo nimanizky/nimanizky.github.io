@@ -2,6 +2,28 @@
 id: 1
 h1_title: "Hello"
 h2_subtitle: "My name is Nurrizky Imani"
+greeting: Nice to meet you
+contact_title: Stay up-to-date
+contact_hint: "Hint: Active on LinkedIn."
+contacts:
+  - icon: instagram
+    label: Instagram
+    link: https://www.instagram.com/nimanizky/
+  - icon: twitter
+    label: Twitter
+    link: https://twitter.com/nimanizky
+  - icon: medium
+    label: Medium
+    link: https://medium.com/@nurrizky
+  - icon: github
+    label: GitHub
+    link: https://github.com/nurrizkyimani
+  - icon: linkedin
+    label: LinkedIn
+    link: https://www.linkedin.com/in/nurrizkyimani/
+  - icon: email
+    label: Email
+    link: mailto:nurrizkyimani@gmail.com
 p_tag: 
   - I am a computer science graduate from Universitas Gadjah Mada, with a deep passion for software engineering and research in computational linguistics, complemented by over three years of experience in developing production-level products. During my studies, I gained experience in research in Natural Language Processing and got hands-on with a wide range of programming work, from frontend and backend development to cloud computing
     

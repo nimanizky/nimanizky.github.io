@@ -2,7 +2,7 @@
 
 A personal portfolio site built with Next.js, TypeScript, and Tailwind CSS.
 
-The page content is statically generated from markdown files in `pages/markdown`, so updating profile data is straightforward without changing React components.
+Classic (`/`) and New look (`/new-look/`) share the portfolio content in `pages/markdown`. New look also lists updates from the existing blog Markdown.
 
 ## Table of Contents
 
@@ -67,26 +67,23 @@ http://localhost:3000
 
 ## Environment Variables
 
-This project supports optional runtime flags:
+This project supports an optional font setting:
 
 ```env
-NEXT_PUBLIC_HIDE_PROJECT_SECTION=false
 NEXT_PUBLIC_USE_V2_FONT=false
 ```
 
 Setup:
 
 1. Copy `.env.example` to `.env.local`
-2. Set `NEXT_PUBLIC_HIDE_PROJECT_SECTION=true` to hide Projects (`false` or unset to show)
-3. Set `NEXT_PUBLIC_USE_V2_FONT=true` to enable Andre-style typography (Kaisei Opti for headings/brand + system sans for body)
-4. Restart the dev server after changes
+2. Set `NEXT_PUBLIC_USE_V2_FONT=true` to enable Andre-style typography (Kaisei Opti for headings/brand + system sans for body)
+3. Restart the dev server after changes
 
 For Vercel:
 
 1. Open Project Settings → Environment Variables
-2. Add `NEXT_PUBLIC_HIDE_PROJECT_SECTION` with value `true` for Production
-3. Add `NEXT_PUBLIC_USE_V2_FONT` with value `true` when you want the new font theme
-4. Redeploy
+2. Add `NEXT_PUBLIC_USE_V2_FONT` with value `true` when you want the new font theme
+3. Redeploy
 
 ## Available Scripts
 
