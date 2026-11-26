@@ -1,137 +1,154 @@
 import type { GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import { useState } from 'react';
 import ContactLinks from '../components/contact-links';
 import ProjectList from '../components/project-list';
-import { getPortfolio, type Portfolio } from '../lib/portfolio';
-import { portfolioMenu } from '../lib/portfolio-menu';
+import { getAllBlogPostSummaries } from '../lib/blog';
+import { getFriends, getPortfolio, type Friend, type Portfolio } from '../lib/portfolio';
 
-export default function Home({ experiences, projects, stacks, about, hero }: Portfolio) {
-  const [menuOpen, setMenuOpen] = useState(false);
+interface Update {
+  path: string;
+  title: string;
+  date: string;
+}
 
+interface HomeProps extends Portfolio {
+  updates: Update[];
+  friends: Friend[];
+}
+
+const INITIAL_UPDATES = 4;
+const sections = [
+  { id: 'about', label: 'About' },
+  { id: 'updates', label: 'Updates' },
+  { id: 'works', label: 'Works' },
+  { id: 'projects', label: 'Projects' },
+  { id: 'skills', label: 'Skills' },
+];
+
+function UpdateList({ updates }: { updates: Update[] }) {
   return (
-    <div className="classic-portfolio">
+    <ul className="new-updates">
+      {updates.map(({ path, title, date }) => (
+        <li key={path}>
+          <time dateTime={date}>{date.slice(5, 7)}/{date.slice(0, 4)}</time>
+          <Link href={`/blog/${path}/`}>{title}</Link>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+export default function Home({ experiences, projects, stacks, about, hero, updates, friends }: HomeProps) {
+  return (
+    <div className="new-portfolio">
       <Head>
         <title>Nurrizky Imani</title>
         <meta name="description" content={hero.p1} />
       </Head>
 
-      <div className="classic-shell">
-        <div className="classic-layout">
-          <button
-            type="button"
-            className="classic-menu-toggle"
-            aria-expanded={menuOpen}
-            aria-controls="portfolio-navigation"
-            onClick={() => setMenuOpen((open) => !open)}
-          >
-            {menuOpen ? 'Close menu' : 'Menu'}
-          </button>
-          <nav
-            id="portfolio-navigation"
-            className="classic-menu"
-            aria-label="Portfolio navigation"
-            data-open={menuOpen}
-          >
-            <ul>
-              {portfolioMenu.map(({ link, icon, label }) => (
-                <li key={link}>
-                  <Link href={link} onClick={() => setMenuOpen(false)}>
-                    <span aria-hidden="true">{icon}</span>
-                    {label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
+      <header className="new-header">
+        <h1>Nurrizky Imani</h1>
+        <nav aria-label="Sections">
+          <ul className="new-section-links">
+            {sections.map(({ id, label }) => (
+              <li key={id}><a href={`#${id}`}>{label}</a></li>
+            ))}
+            <li><Link href="/blog/">Blogs</Link></li>
+          </ul>
+        </nav>
+      </header>
 
-          <main className="classic-content">
-            <section id="home" className="classic-hero">
-              <h1 className="font-title-theme type-display font-bold">{hero.strong}</h1>
-              <div className="classic-intro">
-                <img className="classic-portrait" src={hero.photo_url} alt="Nurrizky Imani" />
-                <div className="type-body reading-width">
-                  <p>{hero.p1}</p>
-                  <p>{hero.p2}</p>
+      <main>
+        <section className="new-section" id="about" aria-label="About">
+          <div className="new-about">
+            <div className="new-bio">
+              <p>{hero.p1}</p>
+              <p>{hero.p2}</p>
+              {about.p_tag.map((paragraph, index) => <p key={index}>{paragraph}</p>)}
+            </div>
+            <div className="new-contact">
+              <img src={hero.photo_url} alt="Nurrizky Imani" width={144} height={144} />
+              <p className="new-contact-hint">{about.contact_hint}</p>
+              <ContactLinks contacts={about.contacts} />
+            </div>
+          </div>
+        </section>
+
+        <section className="new-section" id="updates" aria-labelledby="new-updates-title">
+          <h2 id="new-updates-title">Updates</h2>
+          <UpdateList updates={updates.slice(0, INITIAL_UPDATES)} />
+          {updates.length > INITIAL_UPDATES && (
+            <details className="new-more-updates">
+              <summary>
+                <span className="show-more">Show more</span>
+                <span className="show-less">Show less</span>
+              </summary>
+              <UpdateList updates={updates.slice(INITIAL_UPDATES)} />
+            </details>
+          )}
+        </section>
+
+        <section className="new-section" id="works" aria-labelledby="new-works-title">
+          <h2 id="new-works-title">Works</h2>
+          <ol className="new-work-list">
+            {experiences.map((experience) => (
+              <li key={experience.id} className="new-work">
+                <div className="new-work-heading">
+                  <h3>{experience.company}</h3>
+                  <p className="new-work-date">{experience.date}</p>
                 </div>
+                <p>{experience.title}</p>
+                {experience.highlights.length > 0 && (
+                  <ul className="new-work-highlights">
+                    {experience.highlights.map((highlight, index) => <li key={index}>{highlight}</li>)}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <section className="new-section" id="projects" aria-labelledby="new-projects-title">
+          <h2 id="new-projects-title">Projects</h2>
+          <ProjectList projects={projects} />
+        </section>
+
+        <section className="new-section" id="skills" aria-labelledby="new-skills-title">
+          <h2 id="new-skills-title">Skills</h2>
+          <dl className="new-skills">
+            {stacks.map((stack) => (
+              <div key={stack.title}>
+                <dt>{stack.title}</dt>
+                <dd>{stack.perlevel_stack.join(' · ')}</dd>
               </div>
-              <a className="classic-cta" href="#experience">{hero.cta}</a>
-            </section>
+            ))}
+          </dl>
+        </section>
+        <section className="new-section" id="friends" aria-labelledby="friends-title">
+          <h2 id="friends-title">Friends of Internet</h2>
+          <ul className="friends-grid">
+            {friends.map(({ name, url, domain }) => (
+              <li key={url}>
+                <a href={url}>{name}</a>
+                <span>{domain}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      </main>
 
-            <section id="experience" className="classic-section">
-              <h2 className="classic-section-title font-title-theme type-section-title">Experience 🧳</h2>
-              <ol className="classic-timeline">
-                {experiences.map((experience) => (
-                  <li key={experience.id} className="classic-work">
-                    {experience.emg_photo_url && (
-                      <img className="classic-work-logo" src={experience.emg_photo_url} alt="" />
-                    )}
-                    <div className="classic-work-heading">
-                      <div>
-                        <h3 className="font-title-theme type-card-title">{experience.title}</h3>
-                        <p className="type-meta">{experience.company}</p>
-                      </div>
-                      <p className="classic-work-date type-meta">{experience.date}</p>
-                    </div>
-                    <ul className="type-body list-disc pl-5">
-                      {experience.highlights.map((highlight, index) => (
-                        <li key={index}>{highlight}</li>
-                      ))}
-                    </ul>
-                  </li>
-                ))}
-              </ol>
-            </section>
-
-            <section id="project" className="classic-section">
-              <h2 className="classic-section-title font-title-theme type-section-title">Portfolio 📂</h2>
-              <ProjectList projects={projects} />
-            </section>
-
-            <section id="stack" className="classic-section">
-              <h2 className="classic-section-title font-title-theme type-section-title">Stack 🛠</h2>
-              <div className="classic-stacks">
-                {stacks.map((stack) => (
-                  <div key={stack.title}>
-                    <h3 className="font-title-theme type-card-title">{stack.title}</h3>
-                    <ul className="type-body">
-                      {stack.perlevel_stack.map((skill) => <li key={skill}>{skill}</li>)}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            <section id="about" className="classic-section">
-              <h2 className="classic-section-title font-title-theme type-section-title">About 👨‍🚀</h2>
-              <div className="classic-about">
-                <div className="reading-width">
-                  <p className="font-title-theme type-meta">{about.greeting}</p>
-                  <h3 className="font-title-theme type-section-title font-bold">{about.h1_title}</h3>
-                  <p className="font-title-theme type-card-title">{about.h2_subtitle}</p>
-                  {about.p_tag.map((paragraph, index) => (
-                    <p key={index} className="type-body mt-5">{paragraph}</p>
-                  ))}
-                </div>
-                <div className="classic-contact">
-                  <img className="classic-portrait" src={hero.photo_url} alt="" />
-                  <h3 className="font-title-theme type-card-title">{about.contact_title}</h3>
-                  <p className="type-meta">{about.contact_hint}</p>
-                  <ContactLinks contacts={about.contacts} />
-                  <Link href="/new-look/" className="classic-view-link">
-                    <span aria-hidden="true">✨</span> New look
-                  </Link>
-                </div>
-              </div>
-            </section>
-          </main>
-        </div>
-      </div>
+      <footer className="new-footer">
+        <Link href="/old-look/">Old look</Link>
+      </footer>
     </div>
   );
 }
 
-export const getStaticProps: GetStaticProps<Portfolio> = async () => ({
-  props: getPortfolio(),
+export const getStaticProps: GetStaticProps<HomeProps> = async () => ({
+  props: {
+    ...getPortfolio(),
+    friends: getFriends(),
+    updates: getAllBlogPostSummaries().map(({ path, title, date }) => ({ path, title, date })),
+  },
 });

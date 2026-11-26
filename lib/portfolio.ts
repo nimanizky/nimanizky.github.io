@@ -29,6 +29,12 @@ export interface Contact {
   link: string;
 }
 
+export interface Friend {
+  name: string;
+  url: string;
+  domain: string;
+}
+
 interface About {
   h1_title: string;
   h2_subtitle: string;
@@ -57,6 +63,15 @@ export interface Portfolio {
 
 function readMarkdown(fileName: string) {
   return fs.readFileSync(path.join(process.cwd(), 'pages/markdown', fileName), 'utf8');
+}
+
+export function getFriends(): Friend[] {
+  const { friends = [] } = matter(readMarkdown('friends.md')).data;
+  return friends.map(({ name, url }: Pick<Friend, 'name' | 'url'>) => ({
+    name,
+    url,
+    domain: new URL(url).hostname,
+  }));
 }
 
 function readEntries(fileName: string) {

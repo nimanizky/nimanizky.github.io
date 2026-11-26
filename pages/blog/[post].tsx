@@ -2,6 +2,7 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
+import BlogNav from '../../components/blog-nav';
 import type { BlogPost } from '../../lib/blog';
 import { getAllBlogPostPaths, getBlogPostByPath } from '../../lib/blog';
 import { formatBlogDate } from '../../lib/blog-client';
@@ -18,14 +19,8 @@ const BlogPostPage = ({ post }: BlogPostProps) => {
         <meta name="description" content={post.excerpt} />
       </Head>
 
-      <div className="new-portfolio new-article-page">
-        <nav className="new-article-nav" aria-label="Blog">
-          <Link href="/new-look/#updates">Back to Updates</Link>
-          <ul className="new-section-links">
-            <li><Link href="/blog/">Blog</Link></li>
-            <li><Link href="/blog/tags/">Tags</Link></li>
-          </ul>
-        </nav>
+      <div className="new-portfolio">
+        <BlogNav current="blog" detail />
 
         <main>
           <article className="new-article">
@@ -47,13 +42,16 @@ const BlogPostPage = ({ post }: BlogPostProps) => {
             </div>
 
             {post.tags.length > 0 && (
-              <ul className="new-article-tags" aria-label="Article tags">
-                {post.tags.map((tag, index) => (
-                  <li key={`${post.path}-${tag}`}>
-                    <Link href={`/blog/tags/${post.normalizedTags[index]}`}>{tag}</Link>
-                  </li>
-                ))}
-              </ul>
+              <div className="new-article-tags">
+                <span><Link href="/blog/tags/">Tags</Link>:</span>
+                <ul className="blog-tag-links" aria-label="Article tags">
+                  {post.tags.map((tag, index) => (
+                    <li key={post.normalizedTags[index]}>
+                      <Link href={`/blog/tags/${post.normalizedTags[index]}/`}>{tag}</Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             )}
           </article>
         </main>

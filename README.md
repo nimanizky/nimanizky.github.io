@@ -2,7 +2,7 @@
 
 A personal portfolio site built with Next.js, TypeScript, and Tailwind CSS.
 
-Classic (`/`) and New look (`/new-look/`) share the portfolio content in `pages/markdown`. New look also lists updates from the existing blog Markdown.
+The portfolio homepage (`/`) and Old look (`/old-look/`) share the content in `pages/markdown`. The homepage also lists updates from the blog and friends from `pages/markdown/friends.md`.
 
 ## Table of Contents
 
@@ -20,7 +20,7 @@ Classic (`/`) and New look (`/new-look/`) share the portfolio content in `pages/
 
 ## Tech Stack
 
-- Next.js 13 (Pages Router)
+- Next.js 15 (Pages Router)
 - React 18
 - TypeScript
 - Tailwind CSS
@@ -28,7 +28,7 @@ Classic (`/`) and New look (`/new-look/`) share the portfolio content in `pages/
 
 ## Prerequisites
 
-- Node.js `>=14.6.0` (recommended: Node.js 18 LTS)
+- Node.js 22
 - npm (comes with Node.js)
 
 Check installed versions:
@@ -79,11 +79,7 @@ Setup:
 2. Set `NEXT_PUBLIC_USE_V2_FONT=true` to enable Andre-style typography (Kaisei Opti for headings/brand + system sans for body)
 3. Restart the dev server after changes
 
-For Vercel:
-
-1. Open Project Settings → Environment Variables
-2. Add `NEXT_PUBLIC_USE_V2_FONT` with value `true` when you want the new font theme
-3. Redeploy
+The connected Vercel project uses the Next.js production build. A merge into its production branch (`main`) triggers the Vercel Git integration. The GitHub Pages workflow runs the static export separately.
 
 ## Available Scripts
 
@@ -91,7 +87,6 @@ For Vercel:
 - `npm run build`: Creates production build
 - `npm run start`: Runs production server after build
 - `npm run export`: Exports static site to `out/`
-- `npm run predeploy`: Runs build before deployment
 - `npm run deploy`: Builds, exports, and deploys static files to GitHub Pages using `gh-pages`
 
 ## Project Structure

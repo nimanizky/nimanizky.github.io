@@ -1,11 +1,10 @@
 import { GetStaticProps } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import BlogNav from '../../components/blog-nav';
+import BlogPostList from '../../components/blog-post-list';
 import type { BlogPostSummary } from '../../lib/blog';
 import { getAllBlogPostSummaries } from '../../lib/blog';
-import { formatBlogDate } from '../../lib/blog-client';
 
 interface BlogIndexProps {
   posts: BlogPostSummary[];
@@ -53,45 +52,17 @@ const BlogIndexPage = ({ posts }: BlogIndexProps) => {
         <meta name="description" content="Markdown blog posts by Nurrizky Imani" />
       </Head>
 
-      <main className="min-h-screen bg-gray-100">
-        <BlogNav />
-
-        <section className="mx-auto w-full max-w-4xl px-6 pb-20 pt-8 md:px-10 md:pt-12">
-          {visiblePosts.length === 0 && (
-            <div className="rounded-md border border-gray-300 bg-white px-6 py-7">
-              <p className="type-body">No posts yet. Add markdown files to `pages/markdown/blog/`.</p>
-            </div>
-          )}
-
-          <ul className="space-y-12 md:space-y-14">
-            {visiblePosts.map((post) => (
-              <li key={post.path} className="border-b border-gray-300 pb-12 md:pb-14">
-                <time className="type-meta text-base text-[#8f9398]" dateTime={post.date}>
-                  {formatBlogDate(post.date)}
-                </time>
-
-                <Link href={`/blog/${post.path}`} className="mt-3 block">
-                  <h2 className="font-title-theme text-3xl font-semibold leading-tight text-[#35373b] md:text-4xl">
-                    {post.title}
-                  </h2>
-                </Link>
-
-                <div className="mt-3 h-1 w-12 bg-[#35373b]" />
-
-                <p className="mt-4 max-w-3xl font-body-theme text-[1.1rem] leading-8 text-[#4b4d52] md:text-[1.22rem]">
-                  {post.excerpt}
-                </p>
-              </li>
-            ))}
-          </ul>
-
-          <div ref={loadMoreRef} className="h-10 w-full" />
-
-          {!hasMorePosts && posts.length > 0 && (
-            <p className="type-meta mt-4 text-center text-[#8f9398]">You reached the latest archive boundary.</p>
-          )}
-        </section>
-      </main>
+      <div className="new-portfolio">
+        <BlogNav current="blog" />
+        <main>
+          <header className="new-article-heading">
+            <h1>Blog</h1>
+          </header>
+          {visiblePosts.length === 0 && <p>No posts yet.</p>}
+          <BlogPostList posts={visiblePosts} />
+          {hasMorePosts && <div ref={loadMoreRef} className="h-px" />}
+        </main>
+      </div>
     </>
   );
 };
