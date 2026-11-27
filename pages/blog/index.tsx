@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import BlogNav from '../../components/blog-nav';
 import SpecialLinks from '../../components/special-links';
-import { getSpecialLinks } from '../../lib/special';
+import { getSpecialLinks, kasakKusukSpecialLink } from '../../lib/special';
 import BlogPostList from '../../components/blog-post-list';
 import type { BlogPostSummary } from '../../lib/blog';
 import { getAllBlogPostSummaries } from '../../lib/blog';
@@ -77,10 +77,7 @@ export const getStaticProps: GetStaticProps<BlogIndexProps> = async () => {
   return {
     props: {
       posts,
-      special: [
-        ...getSpecialLinks(posts),
-        { href: '/blog/tags/kasak-kusuk/', label: 'Kasak-Kusuk' },
-      ],
+      special: [...getSpecialLinks(posts), kasakKusukSpecialLink],
     },
   };
 };
