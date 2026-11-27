@@ -5,10 +5,11 @@ import { getSpecialEntries } from './special-content';
 
 const BLOG_POSTS_DIR = path.join(process.cwd(), 'pages/markdown/blog');
 const BLOG_FILENAME_REGEX = /^\d{4}-\d{2}-\d{2}-[a-z0-9]+(?:-[a-z0-9]+)*\.md$/;
-const KASAK_KUSUK_DIR = path.join(BLOG_POSTS_DIR, 'Kasak-Kusuk-Markdown');
+const KASAK_KUSUK_DIR = path.join(BLOG_POSTS_DIR, 'kasak-kusuk-markdown');
 
 export interface BlogPost {
   path: string;
+  draft: boolean;
   sourceUrl: string | null;
   permalink: string | null;
   href: string;
@@ -29,6 +30,7 @@ export interface BlogPost {
 
 export interface BlogPostSummary {
   path: string;
+  draft: boolean;
   sourceUrl: string | null;
   permalink: string | null;
   href: string;
@@ -180,6 +182,7 @@ function getPostFiles(directory: string): string[] {
 function toSummary(post: BlogPost): BlogPostSummary {
   return {
     path: post.path,
+    draft: post.draft,
     sourceUrl: post.sourceUrl,
     permalink: post.permalink,
     href: post.href,
@@ -200,11 +203,17 @@ function isPublished(status: unknown, imported = false): boolean {
     || (typeof status === 'string' && status.trim().toLowerCase() === 'published');
 }
 
+function isArchiveDraft(status: unknown, imported: boolean): boolean {
+  return imported && typeof status === 'string' && status.trim().toLowerCase() === 'draft';
+}
+
 function parsePost(fileName: string, directory: string, imported = false): BlogPost | null {
   validateFilename(fileName);
 
   const { data, content } = matter(fs.readFileSync(path.join(directory, fileName), 'utf8'));
-  return isPublished(data.status, imported) ? parseArticle(fileName, data, content, imported) : null;
+  return isPublished(data.status, imported) || isArchiveDraft(data.status, imported)
+    ? parseArticle(fileName, data, content, imported)
+    : null;
 }
 
 function parseArticle(fileName: string, frontmatter: BlogFrontmatter, content: string, imported = false): BlogPost {
@@ -252,6 +261,7 @@ function parseArticle(fileName: string, frontmatter: BlogFrontmatter, content: s
 
   return {
     path: slug,
+    draft: isArchiveDraft(frontmatter.status, imported),
     sourceUrl,
     legacySlug: typeof frontmatter.legacy_slug === 'string' && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(frontmatter.legacy_slug)
       ? frontmatter.legacy_slug : null,

@@ -12,6 +12,7 @@ interface Update {
   href: string;
   title: string;
   date: string;
+  draft: boolean;
 }
 
 interface HomeProps extends Portfolio {
@@ -31,10 +32,13 @@ const sections = [
 function UpdateList({ updates }: { updates: Update[] }) {
   return (
     <ul className="new-updates">
-      {updates.map(({ href, title, date }) => (
+      {updates.map(({ href, title, date, draft }) => (
         <li key={href}>
           <time dateTime={date}>{date.slice(5, 7)}/{date.slice(0, 4)}</time>
-          <Link href={href}>{title || date}</Link>
+          <span>
+            <Link href={href}>{title || date}</Link>
+            {draft && <span className="blog-draft">Draft</span>}
+          </span>
         </li>
       ))}
     </ul>
@@ -157,7 +161,7 @@ export const getStaticProps: GetStaticProps<HomeProps> = async () => {
     props: {
       ...getPortfolio(),
       friends: getFriends(),
-      updates: posts.map(({ href, title, date }) => ({ href, title, date })),
+      updates: posts.map(({ href, title, date, draft }) => ({ href, title, date, draft })),
       special: getSpecialLinks(posts),
     },
   };

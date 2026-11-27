@@ -694,3 +694,10 @@ main > .special-links li + li {
   margin-top: 1.25rem;
   font-size: 0.875rem;
 }
+
+.blog-draft {
+  margin-inline-start: 0.5rem;
+  color: var(--color-meta);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
