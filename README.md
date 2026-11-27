@@ -114,7 +114,7 @@ The connected Vercel project uses the Next.js production build. A merge into its
 Most portfolio content is loaded from markdown files using frontmatter:
 
 - `pages/markdown/hero.md`
-- `pages/markdown/about.md`
+- `pages/markdown/intro.md`
 - `pages/markdown/work.md`
 - `pages/markdown/project.md`
 - `pages/markdown/stack.md`
@@ -160,6 +160,9 @@ Rules:
 - Tags are case-insensitive for routes and normalized to kebab-case URLs
 - Post order on `/blog` is newest-first by `date` (not by filename)
 - Optional `cover_image` can be local (`/blog/<file>`) or external URL
+- Optional `permalink` sets a unique, single-segment URL such as `/bookshelf/`. All post listings use that URL.
+- Set `pinned: true` to feature a post under **Specials** on the homepage and Blog. Use `pinned_label` to give the featured link a shorter label.
+- Files in `pages/markdown/specials/` appear under **Specials** and define a `label`, `permalink`, and `layout`. Use `layout: article` with normal post metadata to include the page in the Blog archive or `layout: profile` for a standalone profile.
 
 Image guidance:
 

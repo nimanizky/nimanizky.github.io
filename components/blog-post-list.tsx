@@ -8,9 +8,9 @@ export default function BlogPostList({ posts, compact = false }: { posts: BlogPo
       {posts.map((post) => (
         <li key={post.path}>
           {compact ? (
-            <Link href={`/blog/${post.path}/`}>{post.title}</Link>
+            <Link href={post.href}>{post.title}</Link>
           ) : (
-            <h2><Link href={`/blog/${post.path}/`}>{post.title}</Link></h2>
+            <h2><Link href={post.href}>{post.title}</Link></h2>
           )}
           <time dateTime={post.date}>{formatBlogDate(post.date)}</time>
           {!compact && <p>{post.excerpt}</p>}

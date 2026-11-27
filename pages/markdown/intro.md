@@ -17,7 +17,7 @@ contacts:
     link: https://medium.com/@nurrizky
   - icon: github
     label: GitHub
-    link: https://github.com/nurrizkyimani
+    link: https://github.com/nimanizky
   - icon: linkedin
     label: LinkedIn
     link: https://www.linkedin.com/in/nurrizkyimani/

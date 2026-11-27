@@ -105,7 +105,7 @@ export function getPortfolio(): Portfolio {
     perlevel_stack: (entry.perlevel_stack || []).filter(Boolean),
   }));
 
-  const about = matter(readMarkdown('about.md')).data;
+  const about = matter(readMarkdown('intro.md')).data;
   const hero = matter(readMarkdown('hero.md')).data;
 
   return {

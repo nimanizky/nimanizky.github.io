@@ -2,24 +2,26 @@ import type { GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import ContactLinks from '../components/contact-links';
+import SpecialLinks from '../components/special-links';
 import ProjectList from '../components/project-list';
+import { getSpecialLinks } from '../lib/special';
 import { getAllBlogPostSummaries } from '../lib/blog';
 import { getFriends, getPortfolio, type Friend, type Portfolio } from '../lib/portfolio';
 
 interface Update {
-  path: string;
+  href: string;
   title: string;
   date: string;
 }
 
 interface HomeProps extends Portfolio {
   updates: Update[];
+  special: ReturnType<typeof getSpecialLinks>;
   friends: Friend[];
 }
 
 const INITIAL_UPDATES = 4;
 const sections = [
-  { id: 'about', label: 'About' },
   { id: 'updates', label: 'Updates' },
   { id: 'works', label: 'Works' },
   { id: 'projects', label: 'Projects' },
@@ -29,17 +31,17 @@ const sections = [
 function UpdateList({ updates }: { updates: Update[] }) {
   return (
     <ul className="new-updates">
-      {updates.map(({ path, title, date }) => (
-        <li key={path}>
+      {updates.map(({ href, title, date }) => (
+        <li key={href}>
           <time dateTime={date}>{date.slice(5, 7)}/{date.slice(0, 4)}</time>
-          <Link href={`/blog/${path}/`}>{title}</Link>
+          <Link href={href}>{title}</Link>
         </li>
       ))}
     </ul>
   );
 }
 
-export default function Home({ experiences, projects, stacks, about, hero, updates, friends }: HomeProps) {
+export default function Home({ experiences, projects, stacks, about, hero, updates, friends, special }: HomeProps) {
   return (
     <div className="new-portfolio">
       <Head>
@@ -51,6 +53,7 @@ export default function Home({ experiences, projects, stacks, about, hero, updat
         <h1>Nurrizky Imani</h1>
         <nav aria-label="Sections">
           <ul className="new-section-links">
+            <li><Link href="/">Home</Link></li>
             {sections.map(({ id, label }) => (
               <li key={id}><a href={`#${id}`}>{label}</a></li>
             ))}
@@ -69,8 +72,11 @@ export default function Home({ experiences, projects, stacks, about, hero, updat
             </div>
             <div className="new-contact">
               <img src={hero.photo_url} alt="Nurrizky Imani" width={144} height={144} />
-              <p className="new-contact-hint">{about.contact_hint}</p>
-              <ContactLinks contacts={about.contacts} />
+              <div className="new-contact-details">
+                <p className="new-contact-hint">{about.contact_hint}</p>
+                <ContactLinks contacts={about.contacts} />
+              </div>
+              <SpecialLinks links={special} />
             </div>
           </div>
         </section>
@@ -145,10 +151,14 @@ export default function Home({ experiences, projects, stacks, about, hero, updat
   );
 }
 
-export const getStaticProps: GetStaticProps<HomeProps> = async () => ({
-  props: {
-    ...getPortfolio(),
-    friends: getFriends(),
-    updates: getAllBlogPostSummaries().map(({ path, title, date }) => ({ path, title, date })),
-  },
-});
+export const getStaticProps: GetStaticProps<HomeProps> = async () => {
+  const posts = getAllBlogPostSummaries();
+  return {
+    props: {
+      ...getPortfolio(),
+      friends: getFriends(),
+      updates: posts.map(({ href, title, date }) => ({ href, title, date })),
+      special: getSpecialLinks(posts),
+    },
+  };
+};
