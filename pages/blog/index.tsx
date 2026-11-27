@@ -2,6 +2,7 @@ import { GetStaticProps } from 'next';
 import Head from 'next/head';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import BlogNav from '../../components/blog-nav';
+import PinnedPosts from '../../components/pinned-posts';
 import BlogPostList from '../../components/blog-post-list';
 import type { BlogPostSummary } from '../../lib/blog';
 import { getAllBlogPostSummaries } from '../../lib/blog';
@@ -59,6 +60,7 @@ const BlogIndexPage = ({ posts }: BlogIndexProps) => {
             <h1>Blog</h1>
           </header>
           {visiblePosts.length === 0 && <p>No posts yet.</p>}
+          <PinnedPosts posts={posts.filter((post) => post.pinned)} />
           <BlogPostList posts={visiblePosts} />
           {hasMorePosts && <div ref={loadMoreRef} className="h-px" />}
         </main>

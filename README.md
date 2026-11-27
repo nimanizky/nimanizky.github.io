@@ -160,6 +160,8 @@ Rules:
 - Tags are case-insensitive for routes and normalized to kebab-case URLs
 - Post order on `/blog` is newest-first by `date` (not by filename)
 - Optional `cover_image` can be local (`/blog/<file>`) or external URL
+- Optional `permalink` sets a unique, single-segment URL such as `/bookshelf/`. All post listings use that URL.
+- Set `pinned: true` to feature a post on the homepage and Blog. Use `pinned_label` to give the pinned link a shorter label.
 
 Image guidance:
 

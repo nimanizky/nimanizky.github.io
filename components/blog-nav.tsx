@@ -13,7 +13,7 @@ export default function BlogNav({ current, detail = false }: BlogNavProps) {
       <Link href="/" className="blog-brand">Nurrizky Imani</Link>
       <nav aria-label="Blog navigation">
         <ul className="new-section-links">
-          <li><Link href="/#about">About</Link></li>
+          <li><Link href="/">Home</Link></li>
           <li><Link href="/blog/" aria-current={current === 'blog' ? active : undefined}>Blog</Link></li>
           <li><Link href="/blog/tags/" aria-current={current === 'tags' ? active : undefined}>Tags</Link></li>
         </ul>

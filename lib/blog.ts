@@ -7,6 +7,10 @@ const BLOG_FILENAME_REGEX = /^y\d{2}m\d{1,2}w\d{1,2}d\d{1,2}-[a-z0-9]+(?:-[a-z0-
 
 export interface BlogPost {
   path: string;
+  permalink: string | null;
+  href: string;
+  pinned: boolean;
+  pinnedLabel: string;
   title: string;
   date: string;
   tags: string[];
@@ -20,6 +24,10 @@ export interface BlogPost {
 
 export interface BlogPostSummary {
   path: string;
+  permalink: string | null;
+  href: string;
+  pinned: boolean;
+  pinnedLabel: string;
   title: string;
   date: string;
   tags: string[];
@@ -37,6 +45,9 @@ export interface BlogTagGroup {
 
 interface BlogFrontmatter {
   title?: unknown;
+  permalink?: unknown;
+  pinned?: unknown;
+  pinned_label?: unknown;
   date?: unknown;
   tags?: unknown;
   excerpt?: unknown;
@@ -159,6 +170,10 @@ function getPostFiles(): string[] {
 function toSummary(post: BlogPost): BlogPostSummary {
   return {
     path: post.path,
+    permalink: post.permalink,
+    href: post.href,
+    pinned: post.pinned,
+    pinnedLabel: post.pinnedLabel,
     title: post.title,
     date: post.date,
     tags: post.tags,
@@ -192,8 +207,21 @@ function parsePost(fileName: string): BlogPost {
       ? frontmatter.cover_image_alt.trim()
       : null;
 
+  const slug = fileName.replace(/\.md$/, '');
+  const permalink = frontmatter.permalink ?? null;
+  if (permalink !== null && (typeof permalink !== 'string' || !/^\/[a-z0-9]+(?:-[a-z0-9]+)*\/$/.test(permalink))) {
+    throw new Error(`Invalid permalink in ${fileName}. Use a single root slug such as /bookshelf/.`);
+  }
+  if (frontmatter.pinned !== undefined && typeof frontmatter.pinned !== 'boolean') {
+    throw new Error(`Invalid pinned value in ${fileName}. Use true or false.`);
+  }
+
   return {
-    path: fileName.replace(/\.md$/, ''),
+    path: slug,
+    permalink,
+    href: permalink ?? `/blog/${slug}/`,
+    pinned: frontmatter.pinned === true,
+    pinnedLabel: frontmatter.pinned_label === undefined ? title : asRequiredString(frontmatter.pinned_label, 'pinned_label', fileName),
     title,
     date: isoDate,
     tags,
@@ -220,6 +248,17 @@ export function getAllBlogPosts(): BlogPost[] {
   const files = getPostFiles();
   const posts = files.map(parsePost);
 
+  const permalinks = new Set(['/404/', '/500/', '/api/', '/blog/', '/index/']);
+  for (const post of posts) {
+    if (!post.permalink) continue;
+    const slug = post.permalink.slice(1, -1);
+    const collides = ['.tsx', '.ts', '.jsx', '.js', '/index.tsx', '/index.ts', '/index.jsx', '/index.js']
+      .some((extension) => fs.existsSync(path.join(process.cwd(), 'pages', slug + extension)));
+    if (permalinks.has(post.permalink) || collides || fs.existsSync(path.join(process.cwd(), 'public', slug))) {
+      throw new Error(`Unavailable blog permalink ${post.permalink} in ${post.path}`);
+    }
+    permalinks.add(post.permalink);
+  }
   return sortByNewest(posts);
 }
 
@@ -228,7 +267,7 @@ export function getAllBlogPostSummaries(): BlogPostSummary[] {
 }
 
 export function getAllBlogPostPaths(): string[] {
-  return getAllBlogPosts().map((post) => post.path);
+  return getAllBlogPosts().filter((post) => !post.permalink).map((post) => post.path);
 }
 
 export function getBlogPostByPath(postPath: string): BlogPost | null {
