@@ -2,7 +2,7 @@
 title: "Aku yang Mengelak Kepada Camar-Camar"
 date: "2013-05-07"
 status: "Published"
-labels: ["sastra", "seni"]
+labels: ["sastra", "kasak-kusuk"]
 blogger_id: "6325908431712270701"
 source_url: "https://kisahkasahkasih.blogspot.com/2013/05/aku-yang-mengelak-kepada-camar-camar.html"
 ---

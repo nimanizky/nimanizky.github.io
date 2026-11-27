@@ -2,7 +2,7 @@
 title: "Cerita Bawah Permukaan #1 : Permata dari Pelabuhan"
 date: "2013-08-04"
 status: "Published"
-labels: []
+labels: ["dive", "tualangan", "kasak-kusuk"]
 blogger_id: "5385740856663510576"
 source_url: "https://kisahkasahkasih.blogspot.com/2013/08/cerita-bawah-permukaan-1-permata-dari.html"
 ---

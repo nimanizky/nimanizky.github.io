@@ -2,7 +2,7 @@
 title: "Dari Ayah: Cerita Colombus di Mekah"
 date: "2013-05-16"
 status: "Published"
-labels: []
+labels: ["sastra", "kasak-kusuk"]
 blogger_id: "1530597000497410834"
 source_url: "https://kisahkasahkasih.blogspot.com/2013/05/dari-ayah-cerita-colombus-di-mekah.html"
 ---

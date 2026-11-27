@@ -157,7 +157,8 @@ Rules:
 
 - `date` and `excerpt` are required for regular posts. `title` and `tags` can be omitted.
 - The `legacy_slug` field keeps an existing blog URL available after renaming a file.
-- `pages/markdown/blog/kasak-kusuk-markdown/` holds the Blogger archive. Entries with `status: Published` or `status: Draft` appear in the timeline, with a Draft label where applicable. When supplied, `source_url` links back to the original.
+- Set `status: Draft` to hide a regular post.
+- `pages/markdown/blog/kasak-kusuk-markdown/` holds the Blogger archive. Entries with `status: Published` or `status: Draft` appear in the timeline, with a Draft label where applicable. Archive entries share the `kasak-kusuk` label, and `source_url` links back to the original when supplied.
 - `date` must use `YYYY-MM-DD`
 - Tags are case-insensitive for routes and normalized to kebab-case URLs
 - Post order on `/blog` is newest-first by `date` (not by filename)

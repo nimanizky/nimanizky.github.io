@@ -2,7 +2,7 @@
 title: "Tanah Indah Untuk Para Terabaikan Rusak dan Ditinggalkan"
 date: "2013-07-10"
 status: "Published"
-labels: ["seni"]
+labels: ["sastra", "kasak-kusuk"]
 blogger_id: "8641607419664296685"
 source_url: "https://kisahkasahkasih.blogspot.com/2013/07/tanah-indah-untuk-para-terabaikan-rusak.html"
 ---

@@ -2,7 +2,7 @@
 title: "Perjalananku Merangkai Kereta Dalam Sebuah Impian Sewaktu Hujan Sampai Reda"
 date: "2013-04-23"
 status: "Published"
-labels: ["sastra", "seni"]
+labels: ["sastra", "kasak-kusuk"]
 blogger_id: "1099237144206581450"
 source_url: "https://kisahkasahkasih.blogspot.com/2013/04/perjalananku-merangkai-kereta-dalam.html"
 ---

@@ -2,7 +2,7 @@
 title: "Diving,Pariwisata dan Indonesia!"
 date: "2013-06-17"
 status: "Published"
-labels: ["dive", "tualangan"]
+labels: ["dive", "tualangan", "kasak-kusuk"]
 blogger_id: "4652145300500662021"
 source_url: "https://kisahkasahkasih.blogspot.com/2013/06/divingpariwisata-dan-indonesia.html"
 ---

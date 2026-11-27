@@ -2,7 +2,7 @@
 title: "Inilah Kisah Abal-Abal di Dunia Imaji"
 date: "2013-05-04"
 status: "Published"
-labels: []
+labels: ["sastra", "kasak-kusuk"]
 blogger_id: "1857131129404139229"
 source_url: "https://kisahkasahkasih.blogspot.com/2013/05/inilah-kisah-abal-abal-di-dunia-imaji.html"
 ---

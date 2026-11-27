@@ -2,7 +2,7 @@
 title: "Salamkan Tuhan dan Kekasih - Kekasih"
 date: "2013-06-16"
 status: "Published"
-labels: ["sastra", "seni"]
+labels: ["sastra", "kasak-kusuk"]
 blogger_id: "6780451261526110210"
 source_url: "https://kisahkasahkasih.blogspot.com/2013/06/salamkan-tuhan-dan-kekasih-kekasih.html"
 ---

@@ -2,7 +2,7 @@
 title: "Aku Adalah Kotoran Dalam Kotoranku"
 date: "2012-12-30"
 status: "Published"
-labels: ["seni"]
+labels: ["sastra", "kasak-kusuk"]
 blogger_id: "8073493458382287927"
 source_url: "https://kisahkasahkasih.blogspot.com/2012/12/aku-adalah-kotoran-dalam-kotoranku.html"
 ---

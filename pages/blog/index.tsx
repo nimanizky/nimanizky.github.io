@@ -77,7 +77,10 @@ export const getStaticProps: GetStaticProps<BlogIndexProps> = async () => {
   return {
     props: {
       posts,
-      special: getSpecialLinks(posts),
+      special: [
+        ...getSpecialLinks(posts),
+        { href: '/blog/tags/kasak-kusuk/', label: 'Kasak-Kusuk' },
+      ],
     },
   };
 };

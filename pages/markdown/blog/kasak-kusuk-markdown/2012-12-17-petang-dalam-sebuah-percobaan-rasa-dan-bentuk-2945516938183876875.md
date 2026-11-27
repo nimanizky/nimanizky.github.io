@@ -2,7 +2,7 @@
 title: "Petang Dalam Sebuah Percobaan Rasa dan Bentuk"
 date: "2012-12-17"
 status: "Published"
-labels: []
+labels: ["sastra", "kasak-kusuk"]
 blogger_id: "2945516938183876875"
 source_url: "https://kisahkasahkasih.blogspot.com/2012/12/petang-dalam-sebuah-percobaan-rasa-dan.html"
 ---

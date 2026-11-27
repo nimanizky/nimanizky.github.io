@@ -2,7 +2,7 @@
 title: "Diving & Snorkeling. Whats the Difference?"
 date: "2013-06-18"
 status: "Published"
-labels: ["dive", "tualangan"]
+labels: ["dive", "tualangan", "kasak-kusuk"]
 blogger_id: "8442806620785736196"
 source_url: "https://kisahkasahkasih.blogspot.com/2013/06/diving-snorkeling-whats-difference.html"
 ---

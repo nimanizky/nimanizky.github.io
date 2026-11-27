@@ -2,7 +2,7 @@
 title: "Mencoba Mengkritisi dan Berterima Kasih"
 date: "2013-05-01"
 status: "Published"
-labels: []
+labels: ["sastra", "kasak-kusuk"]
 blogger_id: "2533314145576399632"
 source_url: "https://kisahkasahkasih.blogspot.com/2013/05/mencoba-mengkritisi-dan-berterima-kasih.html"
 ---

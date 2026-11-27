@@ -2,7 +2,7 @@
 title: "Sepadannya Rindu-Rindu Berserakan"
 date: "2013-05-08"
 status: "Published"
-labels: ["sastra", "seni"]
+labels: ["sastra", "kasak-kusuk"]
 blogger_id: "1558001228782464269"
 source_url: "https://kisahkasahkasih.blogspot.com/2013/05/sepadanya-rindu-rindu-berserakan.html"
 ---
