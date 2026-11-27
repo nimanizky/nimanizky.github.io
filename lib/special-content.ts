@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import { isPublished } from './content-status';
 
 interface SpecialEntry {
   file: string;
@@ -14,8 +15,9 @@ interface SpecialEntry {
 export function getSpecialEntries(): SpecialEntry[] {
   const directory = path.join(process.cwd(), 'pages/markdown/specials');
 
-  return fs.readdirSync(directory).filter((file) => file.endsWith('.md')).sort().map((file) => {
+  return fs.readdirSync(directory).filter((file) => file.endsWith('.md')).sort().flatMap((file) => {
     const { data, content } = matter(fs.readFileSync(path.join(directory, file), 'utf8'));
+    if (!isPublished(data.status)) return [];
     const { layout, permalink, label } = data;
 
     if ((layout !== 'article' && layout !== 'profile')
@@ -24,6 +26,6 @@ export function getSpecialEntries(): SpecialEntry[] {
       throw new Error(`Invalid layout, permalink, or label in special Markdown file ${file}`);
     }
 
-    return { file, layout, permalink, label: label.trim(), content: content.trim(), data };
+    return [{ file, layout, permalink, label: label.trim(), content: content.trim(), data }];
   });
 }

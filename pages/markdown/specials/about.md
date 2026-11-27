@@ -8,12 +8,13 @@ I live in Jakarta. I work as a software engineer by day and tinker by night. I g
 
 Things I’m interested in:
 
-- **Software engineering**
+- **Software Engineering / Agentic Intelligence**
 - **Economics / Capital**
 - **Indonesiana**
 - **Politics, Power, and Policy**
-- **Oil**
+- **Energy**
 - **Culture and Ideas**
+- **Abundance and Affordability**
 
 ## Elsewhere
 

@@ -1,13 +1,16 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import { isPublished } from './content-status';
 import { getSpecialEntries } from './special-content';
 
 const BLOG_POSTS_DIR = path.join(process.cwd(), 'pages/markdown/blog');
-const BLOG_FILENAME_REGEX = /^y\d{2}m\d{1,2}w\d{1,2}d\d{1,2}-[a-z0-9]+(?:-[a-z0-9]+)*\.md$/;
+const BLOG_FILENAME_REGEX = /^\d{4}-\d{2}-\d{2}-[a-z0-9]+(?:-[a-z0-9]+)*\.md$/;
+const KASAK_KUSUK_DIR = path.join(BLOG_POSTS_DIR, 'kasak-kusuk-markdown');
 
 export interface BlogPost {
   path: string;
+  sourceUrl: string | null;
   permalink: string | null;
   href: string;
   pinned: boolean;
@@ -18,6 +21,8 @@ export interface BlogPost {
   normalizedTags: string[];
   excerpt: string;
   content: string;
+  legacySlug: string | null;
+  imported: boolean;
   coverImage: string | null;
   coverImageAlt: string | null;
   dateValue: number;
@@ -25,6 +30,7 @@ export interface BlogPost {
 
 export interface BlogPostSummary {
   path: string;
+  sourceUrl: string | null;
   permalink: string | null;
   href: string;
   pinned: boolean;
@@ -46,6 +52,10 @@ export interface BlogTagGroup {
 
 interface BlogFrontmatter {
   title?: unknown;
+  source_url?: unknown;
+  legacy_slug?: unknown;
+  status?: unknown;
+  labels?: unknown;
   permalink?: unknown;
   pinned?: unknown;
   pinned_label?: unknown;
@@ -59,7 +69,7 @@ interface BlogFrontmatter {
 function validateFilename(fileName: string): void {
   if (!BLOG_FILENAME_REGEX.test(fileName)) {
     throw new Error(
-      `Invalid blog filename \"${fileName}\". Use y<yy>m<m>w<w>d<d>-<title-kebab>.md`
+      `Invalid blog filename \"${fileName}\". Use YYYY-MM-DD-title-kebab.md`
     );
   }
 }
@@ -157,13 +167,13 @@ function parseTags(rawTags: unknown, fileName: string): { tags: string[]; normal
   return { tags, normalizedTags };
 }
 
-function getPostFiles(): string[] {
-  if (!fs.existsSync(BLOG_POSTS_DIR)) {
+function getPostFiles(directory: string): string[] {
+  if (!fs.existsSync(directory)) {
     return [];
   }
 
   return fs
-    .readdirSync(BLOG_POSTS_DIR)
+    .readdirSync(directory)
     .filter((fileName) => fileName.endsWith('.md'))
     .sort((a, b) => a.localeCompare(b));
 }
@@ -171,6 +181,7 @@ function getPostFiles(): string[] {
 function toSummary(post: BlogPost): BlogPostSummary {
   return {
     path: post.path,
+    sourceUrl: post.sourceUrl,
     permalink: post.permalink,
     href: post.href,
     pinned: post.pinned,
@@ -185,20 +196,38 @@ function toSummary(post: BlogPost): BlogPostSummary {
   };
 }
 
-function parsePost(fileName: string): BlogPost {
+function parsePost(fileName: string, directory: string, imported = false): BlogPost | null {
   validateFilename(fileName);
 
-  const filePath = path.join(BLOG_POSTS_DIR, fileName);
-  const { data, content } = matter(fs.readFileSync(filePath, 'utf8'));
-  return parseArticle(fileName, data, content);
+  const { data, content } = matter(fs.readFileSync(path.join(directory, fileName), 'utf8'));
+  return isPublished(data.status, !imported)
+    ? parseArticle(fileName, data, content, imported)
+    : null;
 }
 
-function parseArticle(fileName: string, frontmatter: BlogFrontmatter, content: string): BlogPost {
-
-  const title = asRequiredString(frontmatter.title, 'title', fileName);
-  const excerpt = asRequiredString(frontmatter.excerpt, 'excerpt', fileName);
+function parseArticle(fileName: string, frontmatter: BlogFrontmatter, content: string, imported = false): BlogPost {
+  const title = typeof frontmatter.title === 'string' ? frontmatter.title.trim() : '';
   const { isoDate, dateMs } = parseDate(frontmatter.date, fileName);
-  const { tags, normalizedTags } = parseTags(frontmatter.tags, fileName);
+  const rawTags = imported ? frontmatter.labels : frontmatter.tags;
+  const { tags, normalizedTags } = rawTags === undefined || (Array.isArray(rawTags) && rawTags.length === 0)
+    ? { tags: [], normalizedTags: [] }
+    : parseTags(rawTags, fileName);
+
+  // Blogger exports repeat the title as the first Markdown heading.
+  const body = imported ? content.trim()
+    .replace(/^# [^\n]*\n+/, '')
+    .replace(/<img\b[^>]*\bsrc="(assets\/[a-f0-9]+\.jpg|https?:\/\/[^"\s]+)"[^>]*>/gi, (_, source: string) => {
+      const url = source.startsWith('assets/')
+        ? `/blog/kasak-kusuk/${source.slice('assets/'.length)}`
+        : source.replace(/^http:/i, 'https:');
+      return `\n\n![Archive image](<${url}>)\n\n`;
+    }) : content.trim();
+  const excerpt = imported
+    ? body.split(/\n\s*\n/).find((paragraph) => !paragraph.trimStart().startsWith('<'))
+        ?.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim().slice(0, 220) ?? ''
+    : asRequiredString(frontmatter.excerpt, 'excerpt', fileName);
+  const sourceUrl = typeof frontmatter.source_url === 'string' && /^https?:\/\//i.test(frontmatter.source_url.trim())
+    ? frontmatter.source_url.trim() : null;
 
   const coverImage =
     typeof frontmatter.cover_image === 'string' && frontmatter.cover_image.trim().length > 0
@@ -221,16 +250,20 @@ function parseArticle(fileName: string, frontmatter: BlogFrontmatter, content: s
 
   return {
     path: slug,
+    sourceUrl,
+    legacySlug: typeof frontmatter.legacy_slug === 'string' && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(frontmatter.legacy_slug)
+      ? frontmatter.legacy_slug : null,
+    imported,
     permalink,
     href: permalink ?? `/blog/${slug}/`,
     pinned: frontmatter.pinned === true,
-    pinnedLabel: frontmatter.pinned_label === undefined ? title : asRequiredString(frontmatter.pinned_label, 'pinned_label', fileName),
+    pinnedLabel: frontmatter.pinned_label === undefined ? title || isoDate : asRequiredString(frontmatter.pinned_label, 'pinned_label', fileName),
     title,
     date: isoDate,
     tags,
     normalizedTags,
     excerpt,
-    content: content.trim(),
+    content: body,
     coverImage,
     coverImageAlt,
     dateValue: dateMs,
@@ -261,8 +294,10 @@ export function validatePermalinks(routes: string[]) {
 }
 
 export function getAllBlogPosts(): BlogPost[] {
-  const files = getPostFiles();
-  const posts = files.map(parsePost);
+  const posts = [
+    ...getPostFiles(BLOG_POSTS_DIR).map((file) => parsePost(file, BLOG_POSTS_DIR)),
+    ...getPostFiles(KASAK_KUSUK_DIR).map((file) => parsePost(file, KASAK_KUSUK_DIR, true)),
+  ].filter((post): post is BlogPost => post !== null);
   for (const entry of getSpecialEntries()) {
     if (entry.layout === 'article') {
       posts.push(parseArticle(entry.file, entry.data, entry.content));
@@ -270,6 +305,14 @@ export function getAllBlogPosts(): BlogPost[] {
   }
 
   validatePermalinks(posts.flatMap(({ permalink }) => permalink ? [permalink] : []));
+  const slugs = new Set<string>();
+  for (const { path, legacySlug, permalink } of posts) {
+    if (permalink) continue;
+    for (const slug of legacySlug ? [path, legacySlug] : [path]) {
+      if (slugs.has(slug)) throw new Error(`Duplicate blog slug ${slug}`);
+      slugs.add(slug);
+    }
+  }
   return sortByNewest(posts);
 }
 
@@ -278,12 +321,13 @@ export function getAllBlogPostSummaries(): BlogPostSummary[] {
 }
 
 export function getAllBlogPostPaths(): string[] {
-  return getAllBlogPosts().filter((post) => !post.permalink).map((post) => post.path);
+  return getAllBlogPosts().filter((post) => !post.permalink)
+    .flatMap(({ path, legacySlug }) => legacySlug ? [path, legacySlug] : [path]);
 }
 
 export function getBlogPostByPath(postPath: string): BlogPost | null {
   const posts = getAllBlogPosts();
-  const foundPost = posts.find((post) => post.path === postPath);
+  const foundPost = posts.find((post) => post.path === postPath || post.legacySlug === postPath);
 
   return foundPost ?? null;
 }

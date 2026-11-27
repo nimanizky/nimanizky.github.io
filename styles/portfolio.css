@@ -689,3 +689,8 @@ main > .special-links li + li {
   font: inherit;
   font-weight: 600;
 }
+
+.blog-source {
+  margin-top: 1.25rem;
+  font-size: 0.875rem;
+}

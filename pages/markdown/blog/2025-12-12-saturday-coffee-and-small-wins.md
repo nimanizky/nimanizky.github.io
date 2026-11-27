@@ -1,6 +1,8 @@
 ---
 title: Saturday Coffee and Small Wins
 date: 2025-12-12
+status: Draft
+legacy_slug: y25m12w2d5-saturday-coffee-and-small-wins
 tags:
   - journal
   - productivity

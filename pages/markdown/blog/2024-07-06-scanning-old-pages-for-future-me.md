@@ -1,6 +1,8 @@
 ---
 title: Scanning Old Pages for Future Me
 date: 2024-07-06
+status: Draft
+legacy_slug: y24m7w1d6-scanning-old-pages-for-future-me
 tags:
   - documentation
   - tooling
