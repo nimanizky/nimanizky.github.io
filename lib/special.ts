@@ -1,8 +1,6 @@
 import { getAllBlogPosts, validatePermalinks, type BlogPostSummary } from './blog';
 import { getSpecialEntries } from './special-content';
 
-export const kasakKusukSpecialLink = { href: '/blog/tags/kasak-kusuk/', label: 'Kasak-Kusuk' };
-
 export function getSpecialLinks(posts: BlogPostSummary[]) {
   const entries = getSpecialEntries();
   const publishedHrefs = new Set(posts.map(({ href }) => href));
@@ -13,6 +11,7 @@ export function getSpecialLinks(posts: BlogPostSummary[]) {
     ...[...articleLinks, ...profileLinks].map(({ permalink, label }) => ({ href: permalink, label })),
     ...posts.filter(({ pinned, href }) => pinned && !specialHrefs.has(href))
       .map(({ href, pinnedLabel }) => ({ href, label: pinnedLabel })),
+    { href: '/blog/tags/kasak-kusuk/', label: 'Kasak-Kusuk' },
   ];
 }
 

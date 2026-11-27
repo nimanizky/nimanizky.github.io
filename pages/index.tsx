@@ -4,7 +4,7 @@ import Link from 'next/link';
 import ContactLinks from '../components/contact-links';
 import SpecialLinks from '../components/special-links';
 import ProjectList from '../components/project-list';
-import { getSpecialLinks, kasakKusukSpecialLink } from '../lib/special';
+import { getSpecialLinks } from '../lib/special';
 import { getAllBlogPostSummaries } from '../lib/blog';
 import { getFriends, getPortfolio, type Friend, type Portfolio } from '../lib/portfolio';
 
@@ -158,7 +158,7 @@ export const getStaticProps: GetStaticProps<HomeProps> = async () => {
       ...getPortfolio(),
       friends: getFriends(),
       updates: posts.map(({ href, title, date }) => ({ href, title, date })),
-      special: [kasakKusukSpecialLink, ...getSpecialLinks(posts)],
+      special: getSpecialLinks(posts),
     },
   };
 };
