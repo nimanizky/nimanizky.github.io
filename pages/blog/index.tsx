@@ -2,19 +2,21 @@ import { GetStaticProps } from 'next';
 import Head from 'next/head';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import BlogNav from '../../components/blog-nav';
-import PinnedPosts from '../../components/pinned-posts';
+import SpecialLinks from '../../components/special-links';
+import { getSpecialLinks } from '../../lib/special';
 import BlogPostList from '../../components/blog-post-list';
 import type { BlogPostSummary } from '../../lib/blog';
 import { getAllBlogPostSummaries } from '../../lib/blog';
 
 interface BlogIndexProps {
   posts: BlogPostSummary[];
+  special: ReturnType<typeof getSpecialLinks>;
 }
 
 const INITIAL_VISIBLE_POSTS = 5;
 const POSTS_PER_BATCH = 5;
 
-const BlogIndexPage = ({ posts }: BlogIndexProps) => {
+const BlogIndexPage = ({ posts, special }: BlogIndexProps) => {
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_POSTS);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
@@ -56,11 +58,11 @@ const BlogIndexPage = ({ posts }: BlogIndexProps) => {
       <div className="new-portfolio">
         <BlogNav current="blog" />
         <main>
+          <SpecialLinks links={special} />
           <header className="new-article-heading">
             <h1>Blog</h1>
           </header>
           {visiblePosts.length === 0 && <p>No posts yet.</p>}
-          <PinnedPosts posts={posts.filter((post) => post.pinned)} />
           <BlogPostList posts={visiblePosts} />
           {hasMorePosts && <div ref={loadMoreRef} className="h-px" />}
         </main>
@@ -75,6 +77,7 @@ export const getStaticProps: GetStaticProps<BlogIndexProps> = async () => {
   return {
     props: {
       posts,
+      special: getSpecialLinks(posts),
     },
   };
 };

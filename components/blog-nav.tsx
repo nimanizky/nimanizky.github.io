@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 interface BlogNavProps {
-  current: 'blog' | 'tags';
+  current?: 'blog' | 'tags';
   detail?: boolean;
 }
 

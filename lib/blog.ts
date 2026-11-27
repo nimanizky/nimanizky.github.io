@@ -244,21 +244,24 @@ function sortByNewest(posts: BlogPost[]): BlogPost[] {
   });
 }
 
+export function validatePermalinks(routes: string[]) {
+  const permalinks = new Set(['/404/', '/500/', '/api/', '/blog/', '/index/']);
+  for (const permalink of routes) {
+    const slug = permalink.slice(1, -1);
+    const collides = ['.tsx', '.ts', '.jsx', '.js', '/index.tsx', '/index.ts', '/index.jsx', '/index.js']
+      .some((extension) => fs.existsSync(path.join(process.cwd(), 'pages', slug + extension)));
+    if (permalinks.has(permalink) || collides || fs.existsSync(path.join(process.cwd(), 'public', slug))) {
+      throw new Error(`Unavailable blog permalink ${permalink}`);
+    }
+    permalinks.add(permalink);
+  }
+}
+
 export function getAllBlogPosts(): BlogPost[] {
   const files = getPostFiles();
   const posts = files.map(parsePost);
 
-  const permalinks = new Set(['/404/', '/500/', '/api/', '/blog/', '/index/']);
-  for (const post of posts) {
-    if (!post.permalink) continue;
-    const slug = post.permalink.slice(1, -1);
-    const collides = ['.tsx', '.ts', '.jsx', '.js', '/index.tsx', '/index.ts', '/index.jsx', '/index.js']
-      .some((extension) => fs.existsSync(path.join(process.cwd(), 'pages', slug + extension)));
-    if (permalinks.has(post.permalink) || collides || fs.existsSync(path.join(process.cwd(), 'public', slug))) {
-      throw new Error(`Unavailable blog permalink ${post.permalink} in ${post.path}`);
-    }
-    permalinks.add(post.permalink);
-  }
+  validatePermalinks(posts.flatMap(({ permalink }) => permalink ? [permalink] : []));
   return sortByNewest(posts);
 }
 

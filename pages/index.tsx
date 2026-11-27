@@ -2,8 +2,9 @@ import type { GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import ContactLinks from '../components/contact-links';
-import PinnedPosts from '../components/pinned-posts';
+import SpecialLinks from '../components/special-links';
 import ProjectList from '../components/project-list';
+import { getSpecialLinks } from '../lib/special';
 import { getAllBlogPostSummaries } from '../lib/blog';
 import { getFriends, getPortfolio, type Friend, type Portfolio } from '../lib/portfolio';
 
@@ -15,7 +16,7 @@ interface Update {
 
 interface HomeProps extends Portfolio {
   updates: Update[];
-  pinned: { href: string; pinnedLabel: string }[];
+  special: ReturnType<typeof getSpecialLinks>;
   friends: Friend[];
 }
 
@@ -40,7 +41,7 @@ function UpdateList({ updates }: { updates: Update[] }) {
   );
 }
 
-export default function Home({ experiences, projects, stacks, about, hero, updates, friends, pinned }: HomeProps) {
+export default function Home({ experiences, projects, stacks, about, hero, updates, friends, special }: HomeProps) {
   return (
     <div className="new-portfolio">
       <Head>
@@ -73,7 +74,7 @@ export default function Home({ experiences, projects, stacks, about, hero, updat
               <img src={hero.photo_url} alt="Nurrizky Imani" width={144} height={144} />
               <p className="new-contact-hint">{about.contact_hint}</p>
               <ContactLinks contacts={about.contacts} />
-              <PinnedPosts posts={pinned} />
+              <SpecialLinks links={special} />
             </div>
           </div>
         </section>
@@ -155,7 +156,7 @@ export const getStaticProps: GetStaticProps<HomeProps> = async () => {
       ...getPortfolio(),
       friends: getFriends(),
       updates: posts.map(({ href, title, date }) => ({ href, title, date })),
-      pinned: posts.filter((post) => post.pinned).map(({ href, pinnedLabel }) => ({ href, pinnedLabel })),
+      special: getSpecialLinks(posts),
     },
   };
 };
