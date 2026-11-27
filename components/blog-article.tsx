@@ -25,11 +25,7 @@ export default function BlogArticle({ post }: BlogPostProps) {
           <article className="new-article">
             <header className="new-article-heading">
               {post.title && <h1>{post.title}</h1>}
-              <p>
-                {!post.draft && 'Published on '}
-                <time dateTime={post.date}>{formatBlogDate(post.date)}</time>
-                {post.draft && <span className="blog-draft">Draft</span>}
-              </p>
+              <p>Published on <time dateTime={post.date}>{formatBlogDate(post.date)}</time></p>
             </header>
 
             {post.coverImage && (

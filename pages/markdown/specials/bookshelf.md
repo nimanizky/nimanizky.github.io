@@ -4,7 +4,7 @@ date: "2019-02-11"
 permalink: "/bookshelf/"
 layout: article
 label: Bookshelf
-tags: [Books, Reading List]
+tags: [books, reading-list]
 excerpt: "A personal reading list, with favorites marked by three asterisks and a section for books I haven’t finished."
 cover_image: /blog/bookshelf.jpg
 cover_image_alt: Sunlight through an ocean wave, seen from underwater

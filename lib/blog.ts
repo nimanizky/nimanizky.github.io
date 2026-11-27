@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import { isPublished } from './content-status';
 import { getSpecialEntries } from './special-content';
 
 const BLOG_POSTS_DIR = path.join(process.cwd(), 'pages/markdown/blog');
@@ -9,7 +10,6 @@ const KASAK_KUSUK_DIR = path.join(BLOG_POSTS_DIR, 'kasak-kusuk-markdown');
 
 export interface BlogPost {
   path: string;
-  draft: boolean;
   sourceUrl: string | null;
   permalink: string | null;
   href: string;
@@ -30,7 +30,6 @@ export interface BlogPost {
 
 export interface BlogPostSummary {
   path: string;
-  draft: boolean;
   sourceUrl: string | null;
   permalink: string | null;
   href: string;
@@ -182,7 +181,6 @@ function getPostFiles(directory: string): string[] {
 function toSummary(post: BlogPost): BlogPostSummary {
   return {
     path: post.path,
-    draft: post.draft,
     sourceUrl: post.sourceUrl,
     permalink: post.permalink,
     href: post.href,
@@ -198,20 +196,11 @@ function toSummary(post: BlogPost): BlogPostSummary {
   };
 }
 
-function isPublished(status: unknown, imported = false): boolean {
-  return (status === undefined && !imported)
-    || (typeof status === 'string' && status.trim().toLowerCase() === 'published');
-}
-
-function isArchiveDraft(status: unknown, imported: boolean): boolean {
-  return imported && typeof status === 'string' && status.trim().toLowerCase() === 'draft';
-}
-
 function parsePost(fileName: string, directory: string, imported = false): BlogPost | null {
   validateFilename(fileName);
 
   const { data, content } = matter(fs.readFileSync(path.join(directory, fileName), 'utf8'));
-  return isPublished(data.status, imported) || isArchiveDraft(data.status, imported)
+  return isPublished(data.status, !imported)
     ? parseArticle(fileName, data, content, imported)
     : null;
 }
@@ -261,7 +250,6 @@ function parseArticle(fileName: string, frontmatter: BlogFrontmatter, content: s
 
   return {
     path: slug,
-    draft: isArchiveDraft(frontmatter.status, imported),
     sourceUrl,
     legacySlug: typeof frontmatter.legacy_slug === 'string' && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(frontmatter.legacy_slug)
       ? frontmatter.legacy_slug : null,
@@ -311,7 +299,7 @@ export function getAllBlogPosts(): BlogPost[] {
     ...getPostFiles(KASAK_KUSUK_DIR).map((file) => parsePost(file, KASAK_KUSUK_DIR, true)),
   ].filter((post): post is BlogPost => post !== null);
   for (const entry of getSpecialEntries()) {
-    if (entry.layout === 'article' && isPublished(entry.data.status)) {
+    if (entry.layout === 'article') {
       posts.push(parseArticle(entry.file, entry.data, entry.content));
     }
   }

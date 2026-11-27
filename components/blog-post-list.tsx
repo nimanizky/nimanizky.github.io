@@ -10,12 +10,9 @@ export default function BlogPostList({ posts, compact = false }: { posts: BlogPo
           {post.title && (compact
             ? <Link href={post.href}>{post.title}</Link>
             : <h2><Link href={post.href}>{post.title}</Link></h2>)}
-          <span>
-            <time dateTime={post.date}>
-              {post.title ? formatBlogDate(post.date) : <Link href={post.href}>{formatBlogDate(post.date)}</Link>}
-            </time>
-            {post.draft && <span className="blog-draft">Draft</span>}
-          </span>
+          <time dateTime={post.date}>
+            {post.title ? formatBlogDate(post.date) : <Link href={post.href}>{formatBlogDate(post.date)}</Link>}
+          </time>
           {!compact && post.excerpt && <p>{post.excerpt}</p>}
         </li>
       ))}
