@@ -34,7 +34,7 @@ function UpdateList({ updates }: { updates: Update[] }) {
       {updates.map(({ href, title, date }) => (
         <li key={href}>
           <time dateTime={date}>{date.slice(5, 7)}/{date.slice(0, 4)}</time>
-          <Link href={href}>{title}</Link>
+          <Link href={href}>{title || date}</Link>
         </li>
       ))}
     </ul>

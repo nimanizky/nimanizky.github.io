@@ -3,7 +3,8 @@ import { getSpecialEntries } from './special-content';
 
 export function getSpecialLinks(posts: BlogPostSummary[]) {
   const entries = getSpecialEntries();
-  const articleLinks = entries.filter(({ layout }) => layout === 'article');
+  const publishedHrefs = new Set(posts.map(({ href }) => href));
+  const articleLinks = entries.filter(({ layout, permalink }) => layout === 'article' && publishedHrefs.has(permalink));
   const profileLinks = entries.filter(({ layout }) => layout === 'profile');
   const specialHrefs = new Set(entries.map(({ permalink }) => permalink));
   return [

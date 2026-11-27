@@ -1,6 +1,7 @@
 ---
 title: API Contracts Before Code
 date: 2025-05-13
+legacy_slug: y25m5w2d2-api-contracts-before-code
 tags:
   - backend
   - architecture

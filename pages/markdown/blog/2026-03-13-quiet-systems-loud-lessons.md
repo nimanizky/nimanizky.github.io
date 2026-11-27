@@ -1,6 +1,7 @@
 ---
 title: Quiet Systems, Loud Lessons
 date: 2026-03-13
+legacy_slug: y26m3w2d4-quiet-systems-loud-lessons
 tags:
   - engineering
   - notes

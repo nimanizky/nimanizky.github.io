@@ -1,6 +1,7 @@
 ---
 title: Shipping Without Panic
 date: 2025-05-18
+legacy_slug: y25m5w3d7-shipping-without-panic
 tags:
   - engineering
   - workflow

@@ -133,8 +133,8 @@ Blog posts are stored as one file per post in `pages/markdown/blog/`.
 
 Filename standard in this repository:
 
-- `y<yy>m<m>w<w>d<d>-<title-kebab>.md`
-- Example: `y26m3w2d4-dokumentasi-musik-rekindled.md`
+- `YYYY-MM-DD-title-kebab.md`
+- Example: `2026-03-13-quiet-systems-loud-lessons.md`
 
 Frontmatter contract:
 
@@ -155,7 +155,9 @@ Full markdown content here...
 
 Rules:
 
-- `title`, `date`, `tags`, and `excerpt` are required
+- `date` and `excerpt` are required for regular posts. `title` and `tags` can be omitted.
+- The `legacy_slug` field keeps an existing blog URL available after renaming a file.
+- `pages/markdown/blog/Kasak-Kusuk-Markdown/` holds the Blogger archive. Only entries with `status: Published` enter the timeline, and `source_url` links back to the original. Keep unpublished Markdown out of public Git history.
 - `date` must use `YYYY-MM-DD`
 - Tags are case-insensitive for routes and normalized to kebab-case URLs
 - Post order on `/blog` is newest-first by `date` (not by filename)

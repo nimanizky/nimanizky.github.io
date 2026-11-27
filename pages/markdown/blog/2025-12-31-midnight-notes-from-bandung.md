@@ -1,6 +1,7 @@
 ---
 title: Midnight Notes from Bandung
 date: 2025-12-31
+legacy_slug: y25m12w5d3-midnight-notes-from-bandung
 tags:
   - reflection
   - life
