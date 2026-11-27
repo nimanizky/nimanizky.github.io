@@ -613,15 +613,14 @@
   .new-contact {
     display: grid;
     grid-row: 1;
-    grid-template-columns: 6rem minmax(0, 1fr);
+    grid-template-columns: 4.5rem minmax(0, 1fr);
     align-items: start;
     column-gap: 0.875rem;
   }
 
   .new-contact img {
-    grid-row: span 2;
-    width: 6rem;
-    height: 6rem;
+    width: 4.5rem;
+    height: 4.5rem;
   }
 
   .new-contact-hint,
@@ -656,9 +655,14 @@
 
 @media (max-width: 36rem) {
   .new-contact .special-links {
-    grid-column: 2;
+    grid-column: 1 / -1;
     margin-bottom: 0;
   }
+}
+
+main > .special-links {
+  padding-bottom: 0.875rem;
+  border-bottom: 1px solid var(--new-border);
 }
 
 main > .special-links ul {

@@ -2,8 +2,8 @@
 title: "Nurrizky’s Bookshelf"
 date: "2019-02-11"
 permalink: "/bookshelf/"
-pinned: true
-pinned_label: Bookshelf
+layout: article
+label: Bookshelf
 tags: [Books, Reading List]
 excerpt: "A personal reading list, with favorites marked by three asterisks and a section for books I haven’t finished."
 cover_image: /blog/bookshelf.jpg

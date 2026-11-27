@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import { getSpecialEntries } from './special-content';
 
 const BLOG_POSTS_DIR = path.join(process.cwd(), 'pages/markdown/blog');
 const BLOG_FILENAME_REGEX = /^y\d{2}m\d{1,2}w\d{1,2}d\d{1,2}-[a-z0-9]+(?:-[a-z0-9]+)*\.md$/;
@@ -188,9 +189,11 @@ function parsePost(fileName: string): BlogPost {
   validateFilename(fileName);
 
   const filePath = path.join(BLOG_POSTS_DIR, fileName);
-  const fileContent = fs.readFileSync(filePath, 'utf8');
-  const { data, content } = matter(fileContent);
-  const frontmatter = data as BlogFrontmatter;
+  const { data, content } = matter(fs.readFileSync(filePath, 'utf8'));
+  return parseArticle(fileName, data, content);
+}
+
+function parseArticle(fileName: string, frontmatter: BlogFrontmatter, content: string): BlogPost {
 
   const title = asRequiredString(frontmatter.title, 'title', fileName);
   const excerpt = asRequiredString(frontmatter.excerpt, 'excerpt', fileName);
@@ -260,6 +263,11 @@ export function validatePermalinks(routes: string[]) {
 export function getAllBlogPosts(): BlogPost[] {
   const files = getPostFiles();
   const posts = files.map(parsePost);
+  for (const entry of getSpecialEntries()) {
+    if (entry.layout === 'article') {
+      posts.push(parseArticle(entry.file, entry.data, entry.content));
+    }
+  }
 
   validatePermalinks(posts.flatMap(({ permalink }) => permalink ? [permalink] : []));
   return sortByNewest(posts);

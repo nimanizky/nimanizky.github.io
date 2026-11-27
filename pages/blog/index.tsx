@@ -58,10 +58,10 @@ const BlogIndexPage = ({ posts, special }: BlogIndexProps) => {
       <div className="new-portfolio">
         <BlogNav current="blog" />
         <main>
-          <SpecialLinks links={special} />
           <header className="new-article-heading">
             <h1>Blog</h1>
           </header>
+          <SpecialLinks links={special} />
           {visiblePosts.length === 0 && <p>No posts yet.</p>}
           <BlogPostList posts={visiblePosts} />
           {hasMorePosts && <div ref={loadMoreRef} className="h-px" />}

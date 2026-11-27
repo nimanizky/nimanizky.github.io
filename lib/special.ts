@@ -1,36 +1,20 @@
-import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
 import { getAllBlogPosts, validatePermalinks, type BlogPostSummary } from './blog';
-
-const profilesDirectory = path.join(process.cwd(), 'pages/markdown/profiles');
-
-export function getProfiles() {
-  return fs.readdirSync(profilesDirectory).filter((file) => file.endsWith('.md')).sort().map((file) => {
-    const { data, content } = matter(fs.readFileSync(path.join(profilesDirectory, file), 'utf8'));
-    const { permalink, label } = data;
-    if (typeof permalink !== 'string' || !/^\/[a-z0-9]+(?:-[a-z0-9]+)*\/$/.test(permalink)
-      || typeof label !== 'string' || !label.trim()) {
-      throw new Error(`Invalid profile permalink or label in ${file}`);
-    }
-    return { permalink, label: label.trim(), content: content.trim() };
-  });
-}
+import { getSpecialEntries } from './special-content';
 
 export function getSpecialLinks(posts: BlogPostSummary[]) {
-  const profiles = getProfiles();
-  validatePermalinks([
-    ...profiles.map((profile) => profile.permalink),
-    ...posts.flatMap(({ permalink }) => permalink ? [permalink] : []),
-  ]);
+  const entries = getSpecialEntries();
+  const articleLinks = entries.filter(({ layout }) => layout === 'article');
+  const profileLinks = entries.filter(({ layout }) => layout === 'profile');
+  const specialHrefs = new Set(entries.map(({ permalink }) => permalink));
   return [
-    ...posts.filter((post) => post.pinned).map(({ href, pinnedLabel }) => ({ href, label: pinnedLabel })),
-    ...profiles.map(({ permalink, label }) => ({ href: permalink, label })),
+    ...[...articleLinks, ...profileLinks].map(({ permalink, label }) => ({ href: permalink, label })),
+    ...posts.filter(({ pinned, href }) => pinned && !specialHrefs.has(href))
+      .map(({ href, pinnedLabel }) => ({ href, label: pinnedLabel })),
   ];
 }
 
 export function getPermalinkEntries() {
-  const profiles = getProfiles();
+  const profiles = getSpecialEntries().filter(({ layout }) => layout === 'profile');
   const posts = getAllBlogPosts().filter(({ permalink }) => permalink !== null);
   validatePermalinks([...profiles.map((profile) => profile.permalink), ...posts.map((post) => post.href)]);
   return { profiles, posts };

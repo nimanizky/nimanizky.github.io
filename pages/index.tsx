@@ -72,8 +72,10 @@ export default function Home({ experiences, projects, stacks, about, hero, updat
             </div>
             <div className="new-contact">
               <img src={hero.photo_url} alt="Nurrizky Imani" width={144} height={144} />
-              <p className="new-contact-hint">{about.contact_hint}</p>
-              <ContactLinks contacts={about.contacts} />
+              <div className="new-contact-details">
+                <p className="new-contact-hint">{about.contact_hint}</p>
+                <ContactLinks contacts={about.contacts} />
+              </div>
               <SpecialLinks links={special} />
             </div>
           </div>
